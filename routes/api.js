@@ -1,26 +1,31 @@
 module.exports = (express) => {
-var router = express.Router();
+    var router = express.Router();
 
-var shortenerLogic = require('../src/module.js');
+    var shortenerLogic = require('../src/module.js');
 
-router.post('/status', (req, res) => {
-res.json({ healthy: true});
-});
+    router.post('/status', (req, res) => {
+        res.json({
+            healthy: true
+        });
+    });
 
-router.post('/v1/url', (req, res) => {
-var url = req.body.url;
+    router.post('/v1/url', (req, res) => {
+        var url = req.body.url;
 
-if (url === '') {
+        if (url === undefined) {
 
-      res.json({ baseUrl: 'Please Insert a URL', newUrl: 'Please Insert a URL' });
-    } else {
+            res.status(400).json({
+                error: 'No url property supplied'
+            });
+        } else {
 
-      var createNewUrl = shortenerLogic.strLogic(5);
+            var createNewUrl = shortenerLogic.strLogic(5);
+            res.status(200).json({
+                url: url,
+                newUrl: createNewUrl
+            });
+        }
+    });
 
-
-      res.json({ baseUrl: url, newUrl: createNewUrl });
-    }
-  });
-
-  return router;
+    return router;
 };
